@@ -1,6 +1,10 @@
 import logo from "../assets/logo.jpg";
+import { useNavigate } from "react-router-dom";
 
 const Form = () => {
+
+  const navigate = useNavigate()
+
   return (
     <div className="w-[500px] border border-zinc-300 rounded-lg shadow-md p-6 flex flex-col gap-4">
       <div className="flex flex-col items-center gap-2">
@@ -37,7 +41,7 @@ const Form = () => {
       <div className="flex flex-row justify-around p-3">
         <p>
           Ainda não possuí uma conta?
-          <a className="text-emerald-500 underline whitespace-nowrap hover:text-emerald-300 cursor-pointer">
+          <a onClick={() => navigate('/cadastro')} className="text-emerald-500 underline whitespace-nowrap hover:text-emerald-300 cursor-pointer">
             Faça seu cadastro
           </a>
         </p>

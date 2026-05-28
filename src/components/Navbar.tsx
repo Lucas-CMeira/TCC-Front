@@ -1,4 +1,3 @@
-import React from "react";
 import GranaFy from "../assets/GranaFy.png";
 import { useNavigate } from "react-router-dom";
 import { MdLogout } from "react-icons/md";

@@ -4,33 +4,35 @@ import HomePage from "../pages/home/home-page";
 import App from "../App";
 import ProfilePage from "../pages/profile/profile-page";
 import CadastroPage from "../pages/login/cadastro-page";
+import ProtectedRoute from "./ProtectedRoute";
 
 const routes = createBrowserRouter([
-    {
-        path: "/login",
-        element: <LoginPage/>
-    },
-    {
-        path: "/cadastro",
-        element: <CadastroPage/>
-    },
-    {
-        path: "/",
-        element: <App/>,
-        children: [
-            {
-                path: "/",
-                element: <HomePage/>,
-                index: true
-            },
-            {
-                path: "/profile",
-                element: <ProfilePage/>
-            },
-            
-        ]
-    }
-]) 
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/cadastro",
+    element: <CadastroPage />,
+  },
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
+      },
+    ],
+  },
+]);
 
-
-export default routes
+export default routes;

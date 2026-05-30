@@ -13,6 +13,7 @@ const Form = () => {
     try {
       const response = await fetch(`${API_URL}/login`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -23,19 +24,15 @@ const Form = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Email ou senha inválidos");
+        throw new Error("Credenciais Inválidas");
       }
-
-      const data = await response.json();
-
-      localStorage.setItem("token", data.token);
 
       alert("Login realizado com sucesso!");
 
       navigate("/");
     } catch (error) {
       console.error(error);
-      alert("Erro ao realizar login");
+      alert("Credenciais Inválidas");
     }
   };
 

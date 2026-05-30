@@ -12,6 +12,13 @@ const FormCadastro = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleRegister = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      alert("Digite um email válido");
+      return;
+    }
+
     if (password !== confirmPassword) {
       alert("As senhas não coincidem");
       return;
@@ -31,14 +38,14 @@ const FormCadastro = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao cadastrar usuário");
+        throw new Error("Credenciais Inválidas");
       }
 
       alert("Usuário cadastrado com sucesso!");
       navigate("/login");
     } catch (error) {
       console.error(error);
-      alert("Erro ao cadastrar usuário");
+      alert("Credenciais Inválidas");
     }
   };
 

@@ -17,9 +17,21 @@ const Navbar = () => {
         </div>
         <div
           className="bg-emerald-500 cursor-pointer shadow-md p-2 rounded-md bg-transparent hover:bg-emerald-700 transition"
+          onClick={() => navigate("/entries")}
+        >
+          Lançamentos
+        </div>
+        <div
+          className="bg-emerald-500 cursor-pointer shadow-md p-2 rounded-md bg-transparent hover:bg-emerald-700 transition"
+          onClick={() => navigate("/goals")}
+        >
+          Metas
+        </div>
+        <div
+          className="bg-emerald-500 cursor-pointer shadow-md p-2 rounded-md bg-transparent hover:bg-emerald-700 transition"
           onClick={() => navigate("/profile")}
         >
-          Profile
+          Perfil do Usuário
         </div>
       </div>
       <div

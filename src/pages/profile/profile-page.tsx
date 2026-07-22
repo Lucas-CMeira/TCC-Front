@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
+import { getGoalCompletionDetails } from "../goals/goals-page";
 import {
   ResponsiveContainer,
   PieChart,
@@ -225,6 +226,78 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+
+      {/* ── Conquistas de Metas ─────────────────────────────────────────────── */}
+      {(() => {
+        const completedGoals = goals.filter((g: any) => {
+          const detail = getGoalCompletionDetails(g);
+          return detail.isCompleted;
+        });
+
+        if (completedGoals.length === 0) return null;
+
+        return (
+          <div className="bg-white p-6 rounded-2xl shadow">
+            <div className="mb-5">
+              <h2 className="text-lg font-semibold text-slate-800">🏆 Conquistas</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Metas que você já completou — veja quando e se foi no prazo!</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {completedGoals.map((goal: any) => {
+                const detail = getGoalCompletionDetails(goal);
+                return (
+                  <div
+                    key={goal.id}
+                    className="border border-emerald-200 bg-emerald-50/60 rounded-xl p-4 flex flex-col gap-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">🎯</span>
+                      <p className="font-semibold text-slate-800 text-sm truncate">{goal.title}</p>
+                    </div>
+
+                    {goal.description && (
+                      <p className="text-xs text-slate-500 pl-7">{goal.description}</p>
+                    )}
+
+                    <div className="pl-7 flex flex-col gap-1">
+                      <p className="text-xs text-slate-500">
+                        🗓️ Meta: <strong>R$ {goal.value.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</strong>
+                      </p>
+                      {detail.completedDate && (
+                        <p className="text-xs text-emerald-700 font-medium">
+                          ✅ Concluída em: <strong>{new Date(detail.completedDate).toLocaleDateString("pt-BR")}</strong>
+                        </p>
+                      )}
+                      <p className="text-xs text-slate-500">
+                        📅 Prazo era: <strong>{new Date(goal.limitDate).toLocaleDateString("pt-BR")}</strong>
+                      </p>
+                    </div>
+
+                    <div className="mt-1">
+                      {detail.status === "early" && (
+                        <span className="text-xs bg-emerald-100 text-emerald-700 font-semibold px-2 py-1 rounded-full">
+                          🎉 {detail.diffDays} dia{detail.diffDays !== 1 ? "s" : ""} antes do prazo!
+                        </span>
+                      )}
+                      {detail.status === "on_time" && (
+                        <span className="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-1 rounded-full">
+                          🎯 Exatamente no prazo!
+                        </span>
+                      )}
+                      {detail.status === "late" && (
+                        <span className="text-xs bg-amber-100 text-amber-800 font-semibold px-2 py-1 rounded-full">
+                          ⚠️ {detail.diffDays} dia{detail.diffDays !== 1 ? "s" : ""} após o prazo
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ── Histórico Geralzão de Transações ─────────────────────────────────── */}
       <div className="bg-white p-6 rounded-2xl shadow">

@@ -481,7 +481,7 @@ const EntriesPage = () => {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
             <div className="flex justify-between items-center p-6 border-b">
               <h2 className="text-lg font-semibold text-slate-800">Editar Lançamento</h2>
-              <button onClick={closeEdit} className="text-slate-400 hover:text-slate-600 transition">
+              <button type="button" onClick={closeEdit} className="text-slate-400 hover:text-slate-600 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -650,12 +650,14 @@ const EntriesPage = () => {
             </p>
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={() => setDeletingId(null)}
                 className="flex-1 py-2 px-4 border border-slate-300 rounded-lg text-slate-700 font-medium hover:bg-slate-50 transition"
               >
                 Cancelar
               </button>
               <button
+                type="button"
                 onClick={() => handleDelete(deletingId)}
                 className="flex-1 py-2 px-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition"
               >

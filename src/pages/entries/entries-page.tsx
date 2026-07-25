@@ -1,3 +1,5 @@
+// Página de lançamentos: formulário de criação, histórico com edição e exclusão, suporte a lançamentos fixos mensais.
+
 import { useEffect, useState } from "react";
 import API_URL from "../../services/api";
 import { formatCurrency, parseCurrency } from "../../utils/currencyMask";
@@ -7,18 +9,16 @@ const EntriesPage = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [goals, setGoals] = useState<any[]>([]);
 
-  // Form de criação
   const [title, setTitle] = useState("");
-  const [displayValue, setDisplayValue] = useState(""); // valor formatado exibido
+  const [displayValue, setDisplayValue] = useState("");
   const [type, setType] = useState("expenses");
   const [date, setDate] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [customCategory, setCustomCategory] = useState(""); // para quando Outros é selecionado
+  const [customCategory, setCustomCategory] = useState("");
   const [goalId, setGoalId] = useState("");
   const [isFixed, setIsFixed] = useState(false);
   const [fixedDay, setFixedDay] = useState("");
 
-  // Modal de edição de lançamento
   const [editEntry, setEditEntry] = useState<any | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDisplayValue, setEditDisplayValue] = useState("");
@@ -30,7 +30,6 @@ const EntriesPage = () => {
   const [editIsFixed, setEditIsFixed] = useState(false);
   const [editFixedDay, setEditFixedDay] = useState("");
 
-  // Confirmação de exclusão
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchData = async () => {
@@ -53,11 +52,9 @@ const EntriesPage = () => {
     fetchData();
   }, []);
 
-  // Categoria selecionada atualmente (criação)
   const selectedCategory = categories.find((c) => c.id === categoryId);
   const isOthers = selectedCategory?.name === "Outros";
 
-  // Categoria selecionada atualmente (edição)
   const selectedEditCategory = categories.find((c) => c.id === editCategoryId);
   const isEditOthers = selectedEditCategory?.name === "Outros";
 
@@ -141,7 +138,6 @@ const EntriesPage = () => {
     }
   };
 
-  // Abrir modal de edição
   const openEdit = (entry: any) => {
     setEditEntry(entry);
     setEditTitle(entry.title);
@@ -260,7 +256,6 @@ const EntriesPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Formulário de Criação */}
         <div className="bg-white p-6 rounded-xl shadow h-fit">
           <h2 className="text-lg font-semibold text-slate-800 mb-6">Novo Lançamento</h2>
 
@@ -412,7 +407,6 @@ const EntriesPage = () => {
           </form>
         </div>
 
-        {/* Histórico com Edição e Exclusão */}
         <div className="bg-white p-6 rounded-xl shadow">
           <h2 className="text-lg font-semibold text-slate-800 mb-6">Histórico de Lançamentos</h2>
 
@@ -445,7 +439,6 @@ const EntriesPage = () => {
                       {entry.type === "income" ? "+" : "-"} R$ {formatValue(entry.value)}
                     </div>
 
-                    {/* Botões de Ação */}
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => openEdit(entry)}
@@ -475,7 +468,6 @@ const EntriesPage = () => {
         </div>
       </div>
 
-      {/* ── Modal de Edição de Lançamento ────────────────────────────────────────── */}
       {editEntry && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
@@ -637,7 +629,6 @@ const EntriesPage = () => {
         </div>
       )}
 
-      {/* ── Modal de Confirmação de Exclusão de Lançamento ───────────────────────── */}
       {deletingId && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">

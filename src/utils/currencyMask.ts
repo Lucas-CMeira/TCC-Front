@@ -1,3 +1,4 @@
+// Utilitário de máscara monetária: formata strings de entrada no padrão pt-BR e converte de volta para número.
 
 export function formatCurrency(raw: string): string {
   const digits = raw.replace(/\D/g, "");

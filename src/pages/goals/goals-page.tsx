@@ -1,8 +1,9 @@
+// Página de metas financeiras: criação, listagem com progresso, edição e exclusão de metas.
+
 import { useEffect, useState } from "react";
 import API_URL from "../../services/api";
 import { formatCurrency, parseCurrency } from "../../utils/currencyMask";
 
-// ─── Tipos ───────────────────────────────────────────────────────────────────
 interface GoalEntry {
   id?: string;
   type: string;
@@ -19,13 +20,11 @@ interface Goal {
   entries: GoalEntry[];
 }
 
-// ─── Helper de Cálculo de Cumprimento da Meta ──────────────────────────────────
 export function getGoalCompletionDetails(goal: Goal) {
   if (!goal || !goal.entries || goal.entries.length === 0) {
     return { isCompleted: false, completedDate: null, diffDays: 0, status: "none" };
   }
 
-  // Ordena lançamentos por data ascendente para descobrir qual entrada atingiu o objetivo
   const sortedEntries = [...goal.entries].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
@@ -49,7 +48,6 @@ export function getGoalCompletionDetails(goal: Goal) {
   const completedDateObj = new Date(completedEntry.date);
   const limitDateObj = new Date(goal.limitDate);
 
-  // Normaliza horas para comparar apenas datas
   completedDateObj.setHours(0, 0, 0, 0);
   limitDateObj.setHours(0, 0, 0, 0);
 
@@ -68,17 +66,14 @@ export function getGoalCompletionDetails(goal: Goal) {
   };
 }
 
-// ─── Componente principal ─────────────────────────────────────────────────────
 const GoalsPage = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
 
-  // Form de criação
   const [title, setTitle] = useState("");
   const [displayValue, setDisplayValue] = useState("");
   const [limitDate, setLimitDate] = useState("");
   const [description, setDescription] = useState("");
 
-  // Modal de edição
   const [editGoal, setEditGoal] = useState<Goal | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDisplayValue, setEditDisplayValue] = useState("");
@@ -86,7 +81,6 @@ const GoalsPage = () => {
   const [editDescription, setEditDescription] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // Modal direto de exclusão (a partir do card)
   const [deleteTarget, setDeleteTarget] = useState<Goal | null>(null);
 
   const fetchGoals = async () => {
@@ -100,7 +94,6 @@ const GoalsPage = () => {
 
   useEffect(() => { fetchGoals(); }, []);
 
-  // ── Handlers de criação ──────────────────────────────────────────────────
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setDisplayValue(formatCurrency(e.target.value));
 
@@ -127,7 +120,6 @@ const GoalsPage = () => {
     } catch (error) { console.error(error); }
   };
 
-  // ── Handlers de edição ───────────────────────────────────────────────────
   const openEdit = (goal: Goal) => {
     setEditGoal(goal);
     setEditTitle(goal.title);
@@ -198,7 +190,6 @@ const GoalsPage = () => {
     await executeGoalDelete(editGoal.id);
   };
 
-  // ── Utilitários ──────────────────────────────────────────────────────────
   const calculateProgress = (goal: Goal) => {
     if (!goal.entries || goal.entries.length === 0) return 0;
     const total = goal.entries.reduce((acc, entry) => acc + Math.abs(Number(entry.value)), 0);
@@ -219,7 +210,6 @@ const GoalsPage = () => {
     return `${days} dia${days !== 1 ? "s" : ""} restante${days !== 1 ? "s" : ""}`;
   };
 
-  // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="mb-8">
@@ -227,7 +217,6 @@ const GoalsPage = () => {
         <p className="text-slate-500 text-sm">Defina e acompanhe seus objetivos financeiros</p>
       </div>
 
-      {/* Banner explicativo */}
       <div className="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex gap-3 items-start">
         <span className="text-2xl">💡</span>
         <div>
@@ -242,7 +231,6 @@ const GoalsPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* ── Formulário de criação ─────────────────────────────────────────── */}
         <div className="bg-white p-6 rounded-xl shadow h-fit">
           <h2 className="text-lg font-semibold text-slate-800 mb-6">Nova Meta</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -311,7 +299,6 @@ const GoalsPage = () => {
           </form>
         </div>
 
-        {/* ── Lista de metas ────────────────────────────────────────────────── */}
         <div className="bg-white p-6 rounded-xl shadow">
           <h2 className="text-lg font-semibold text-slate-800 mb-6">Metas Ativas</h2>
 
@@ -334,7 +321,6 @@ const GoalsPage = () => {
                     key={goal.id}
                     className={`border rounded-xl p-4 transition ${isCompleted ? "border-emerald-300 bg-emerald-50/60" : "hover:border-slate-300"}`}
                   >
-                    {/* Header */}
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -350,7 +336,6 @@ const GoalsPage = () => {
                         )}
                       </div>
 
-                      {/* Botões de Ação */}
                       <div className="flex items-center gap-1 ml-3 flex-shrink-0">
                         <button
                           type="button"
@@ -376,7 +361,6 @@ const GoalsPage = () => {
                       </div>
                     </div>
 
-                    {/* Detalhes de Conclusão / Prazo */}
                     {isCompleted && completion.completedDate ? (
                       <div className="mb-3 p-2 rounded-lg bg-emerald-100/70 border border-emerald-200 text-xs text-emerald-800 font-medium flex flex-col gap-0.5">
                         <div className="flex items-center gap-1.5">
@@ -407,7 +391,6 @@ const GoalsPage = () => {
                       </p>
                     )}
 
-                    {/* Barra de progresso */}
                     <div className="w-full bg-slate-200 h-3 rounded-full overflow-hidden mb-2">
                       <div
                         className={`h-3 rounded-full transition-all duration-500 ${isCompleted ? "bg-emerald-500" : "bg-emerald-400"}`}
@@ -415,7 +398,6 @@ const GoalsPage = () => {
                       />
                     </div>
 
-                    {/* Valores */}
                     <div className="flex justify-between text-sm">
                       <span className="text-emerald-700 font-medium">
                         R$ {formatValue(progressValue)}
@@ -439,7 +421,6 @@ const GoalsPage = () => {
         </div>
       </div>
 
-      {/* ── Modal de edição ───────────────────────────────────────────────────── */}
       {editGoal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
@@ -519,7 +500,6 @@ const GoalsPage = () => {
               </button>
             </form>
 
-            {/* Zona de exclusão no modal */}
             <div className="px-6 pb-6 border-t pt-4">
               {!showDeleteConfirm ? (
                 <button
@@ -558,7 +538,6 @@ const GoalsPage = () => {
         </div>
       )}
 
-      {/* ── Modal Direto de Exclusão de Meta ────────────────────────────────────── */}
       {deleteTarget && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
